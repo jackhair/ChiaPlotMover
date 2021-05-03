@@ -27,3 +27,4 @@ Schedules a job to periodically move Chia `.plot` files from a staging drive to 
 - `STAGING` - Directory where files are staged. Example: `STAGING=D:/`
 - `DESTINATION` - Directory where files will be moved to. Example: `DESTINATION=E:/`
 - `DISCORD_WEBHOOK_URL` - _[OPTIONAL]_ Webhook URL for sending messages to Discord
+  - https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks
