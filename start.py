@@ -4,16 +4,24 @@ import signal
 import os
 import shutil
 import discord_notify
+import sys
 
 from datetime import timedelta
 from dotenv import load_dotenv, find_dotenv
 
-load_dotenv(find_dotenv())
+envFile = find_dotenv()
+
+if not envFile:
+    print("No .env file found, please duplicate .env.sample and rename to .env")
+    sys.exit()
+    
+
+load_dotenv(envFile)
 
 # ------------------
 # CONFIG
 # ------------------
-WAIT_TIME_SECONDS = os.environ.get("INTERVAL")
+WAIT_TIME_SECONDS = int(os.environ.get("INTERVAL"))
 STAGING_DIR = os.environ.get("STAGING")
 DESTINATION_DIR = os.environ.get("DESTINATION")
 DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL")
