@@ -9,6 +9,8 @@ Schedules a job to periodically move Chia `.plot` files from a staging drive to 
 - [x] Moves `.plot` files from staging to destination drive
 - [x] Set custom interval for job to run
 - [x] Sends updates to Discord using Webhooks
+
+#### TODO
 - [ ] Check that destination drive has space for plot
 - [ ] Use an array of destination drives
 
