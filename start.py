@@ -6,51 +6,51 @@ import shutil
 import discord_notify
 
 from datetime import timedelta
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
 
 # ------------------
-# User Configuration
+# CONFIG
 # ------------------
-# Update these settings to match your system
-
-# Time interval between jobs
-WAIT_TIME_SECONDS = 1800
-# Directory you stage your files at
-STAGING_DIR = 'R:/'
-# Destination to move staged files to
-DESTINATION_DIR = "G:/"
-# Discord webhook URL for sending Discord messages on job complete
-DISCORD_WEBHOOK_URL = ""
+WAIT_TIME_SECONDS = os.environ.get("INTERVAL")
+STAGING_DIR = os.environ.get("STAGING")
+DESTINATION_DIR = os.environ.get("DESTINATION")
+DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL")
 
 
 class ProgramKilled(Exception):
     pass
 
 
+def sendMessage(message):
+    print(f"{time.ctime()} - {message}")
+
+    time.sleep(1)
+
+    if DISCORD_WEBHOOK_URL is not None:
+        notifier = discord_notify.Notifier(DISCORD_WEBHOOK_URL)
+        notifier.send(message, print_message=False)
+
+
 def init():
-    print(time.ctime())
-    print("Checking staging drive: " + STAGING_DIR)
+    sendMessage(f"Start check: {STAGING_DIR}")
 
     stagingFiles = os.listdir(STAGING_DIR)
-    notifier = discord_notify.Notifier(DISCORD_WEBHOOK_URL)
 
     # Check if files exist
     if not stagingFiles:
-        stagingEmptyMessage = "Staging empty."
-        notifier.send(stagingEmptyMessage, print_message=False)
-        print(stagingEmptyMessage)
+        sendMessage("Staging empty.")
         return
 
     # Filter files for .plot extension
     filteredFiles = list(filter(lambda k: k.endswith(".plot"), stagingFiles))
 
     if not filteredFiles:
-        noPlotsMessage = "No plots found."
-        notifier.send(noPlotsMessage, print_message=False)
-        print(noPlotsMessage)
+        sendMessage("No plots found.")
         return
 
-    print("Found " +
-          str(len(filteredFiles)) + " plots.")
+    sendMessage(f"Found {str(len(filteredFiles))} plots.")
 
     for file in filteredFiles:
         fileLocation = STAGING_DIR + file
@@ -59,21 +59,13 @@ def init():
         destinationDrive = DESTINATION_DIR
         destinationFileLocation = destinationDrive + file
 
-        print("- " + file)
-
-        print("- Size: " +
-              str(fileSizeBytes/1000000) + " MB")
-
-        print("Moving file...")
+        sendMessage(file)
+        sendMessage(f"Size: {str(fileSizeBytes/1000000)} MB")
+        sendMessage("Moving file...")
 
         shutil.move(fileLocation, destinationFileLocation)
 
-        message = "Moved plot from staging: " + file
-
-        notifier.send(message, print_message=False)
-        print(message)
-
-        print("-------------------")
+        sendMessage("Moved plot from staging: " + file)
 
     return
 
@@ -103,17 +95,18 @@ class Job(threading.Thread):
 
 if __name__ == "__main__":
     # Inform schedule start
-    print("Starting staging scheduler.")
-    print("Checking drive: " + STAGING_DIR)
-    print("Scheduled every: " + str(WAIT_TIME_SECONDS) + " seconds")
-    
+    sendMessage("Starting staging scheduler.")
+    sendMessage("Staging drive set: " + STAGING_DIR)
+    sendMessage("Destination drive set: " + DESTINATION_DIR)
+    sendMessage("Schedule interval: " + str(WAIT_TIME_SECONDS) + " seconds")
+
     # Signal stuff
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGINT, signal_handler)
-    
+
     # Run initial check
     init()
-    
+
     # Create and schedule job
     job = Job(interval=timedelta(seconds=WAIT_TIME_SECONDS), execute=init)
     job.start()
