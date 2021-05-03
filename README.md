@@ -3,7 +3,7 @@ Schedules a job to periodically move Chia `.plot` files from a staging drive to 
 
 **Disclaimer:** I have never written Python before, so this is very much a learning exercise.
 
-![image](https://user-images.githubusercontent.com/357712/116837132-08fd9e80-ab7e-11eb-819c-d0bc35504879.png)
+![image](https://user-images.githubusercontent.com/357712/116839114-dc4d8500-ab85-11eb-9b8e-dd84a7abacaa.png)
 
 #### Features
 - [x] Moves `.plot` files from staging to destination drive
