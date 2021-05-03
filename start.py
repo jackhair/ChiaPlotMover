@@ -103,10 +103,11 @@ class Job(threading.Thread):
 
 if __name__ == "__main__":
     # Inform schedule start
-    sendMessage("Starting staging scheduler.")
+    sendMessage("Starting Chia Plot Mover")
     sendMessage("Staging drive set: " + STAGING_DIR)
     sendMessage("Destination drive set: " + DESTINATION_DIR)
     sendMessage("Schedule interval: " + str(WAIT_TIME_SECONDS) + " seconds")
+    sendMessage("- - - - - - - - - - - - - - - - - -")
 
     # Signal stuff
     signal.signal(signal.SIGTERM, signal_handler)
