@@ -15,7 +15,7 @@ Schedules a job to periodically move Chia `.plot` files from a staging drive to 
 ## Installation
 
 1. Install the latest version of Python: https://www.python.org/downloads/
-2. Download the repo with `git clone`
+2. Download the repo with `git clone` or download `.zip`
 3. Move into downloaded folder with `cd`
 4. Install requirements `pip install -r requirements.txt`
 5. Rename `.env.sample` to `.env` and configure (see Config below)
